@@ -1,0 +1,124 @@
+(node:15936) [DEP0176] DeprecationWarning: fs.F_OK is deprecated, use fs.constants.F_OK instead
+(Use `node --trace-deprecation ...` to show where the warning was created)
+newman
+
+LUDO-T Multi-Tier Server - HTTP Servlet Gateway Tests (COMP63038 A2)
+
+→ 01 Queue metrics before load (GET /api/stats)
+  GET http://127.0.0.1:9181/api/stats [200 OK, 880B, 23ms]
+  √  200 OK
+  √  8 worker threads and a 2000-slot bounded queue
+  √  nothing dropped
+
+→ 02 Join as RED (POST /api/room/join)
+  POST http://127.0.0.1:9181/api/room/join [200 OK, 412B, 9ms]
+  √  200 OK
+  √  joined via the request queue
+  √  assigned RED
+
+→ 03 Join as GREEN
+  POST http://127.0.0.1:9181/api/room/join [200 OK, 416B, 5ms]
+  √  200 OK
+
+→ 04 Join as YELLOW
+  POST http://127.0.0.1:9181/api/room/join [200 OK, 418B, 2ms]
+  √  200 OK
+
+→ 05 Join as BLUE (4th player -> match auto-starts)
+  POST http://127.0.0.1:9181/api/room/join [200 OK, 414B, 6ms]
+  √  200 OK
+
+→ 06 Room status (GET /api/room/status)
+  GET http://127.0.0.1:9181/api/room/status?roomId=POSTMAN [200 OK, 410B, 4ms]
+  √  200 OK
+  √  four players seated and match started
+  √  RED has the first turn
+
+→ 07 GREEN rolls out of turn -> rejected (POST /api/game/roll)
+  POST http://127.0.0.1:9181/api/game/roll [409 Conflict, 317B, 5ms]
+  √  409 Conflict
+  √  server enforces turn order
+
+→ 08 RED rolls the dice (POST /api/game/roll)
+  POST http://127.0.0.1:9181/api/game/roll [200 OK, 338B, 4ms]
+  √  200 OK
+  √  dice value in 1..6
+  √  next step is a piece prompt or the turn passes
+
+→ 09 RED moves R1 (POST /api/game/move)
+  POST http://127.0.0.1:9181/api/game/move [409 Conflict, 315B, 4ms]
+  √  no piece was offered (roll was not a 6): move is ignored or rejected, never applied
+
+→ 10 Full board state (GET /api/game/state)
+  GET http://127.0.0.1:9181/api/game/state?roomId=POSTMAN [200 OK, 1.39kB, 5ms]
+  √  200 OK
+  √  16 tokens with a legal state each
+  √  served by the embedded Apache Tomcat
+
+→ 11 Drain RED's server events (GET /api/game/events)
+  GET http://127.0.0.1:9181/api/game/events?clientId=HTTP-582fa340-6085-4927-b373-38051bd596e9 [200 OK, 5.37kB, 4ms]
+  √  200 OK
+  √  events include ROOM_JOINED, GAME_START and a DICE_ROLLED broadcast
+
+→ 11b Long-poll RED's events (GET /api/game/events?waitMs=2000)
+  GET http://127.0.0.1:9181/api/game/events?clientId=HTTP-582fa340-6085-4927-b373-38051bd596e9&waitMs=2000 [200 OK, 267B, 2.9s]
+  √  200 OK
+  √  answered within the long-poll window
+  √  well-formed event list
+
+→ 12 Post chat (POST /api/chat)
+  POST http://127.0.0.1:9181/api/chat [200 OK, 236B, 4ms]
+  √  200 OK
+  √  queued for broadcast
+
+→ 13 Read chat (GET /api/chat)
+  GET http://127.0.0.1:9181/api/chat [200 OK, 403B, 4ms]
+  √  200 OK
+  √  message is in the history
+
+→ 14 Leaderboard from the database tier (GET /api/leaderboard)
+  GET http://127.0.0.1:9181/api/leaderboard [200 OK, 296B, 16ms]
+  √  200 OK
+  √  leaderboard array and match history are present
+  √  source names the database tier
+
+→ 15 Unknown client is refused (401)
+  POST http://127.0.0.1:9181/api/game/roll [401 Unauthorized, 264B, 5ms]
+  √  401 Unauthorized
+
+→ 16 Missing parameter is refused (400)
+  POST http://127.0.0.1:9181/api/game/move [400 Bad Request, 226B, 7ms]
+  √  400 Bad Request
+
+□ Load (run this folder with 200+ iterations in the Collection Runner)
+└ L1 Rapid roll attempts from all four players
+  POST http://127.0.0.1:9181/api/game/roll [200 OK, 341B, 7ms]
+  √  every request is answered (200 accepted, 409 out-of-turn, 202 queued)
+
+└ L2 Queue metrics after load (GET /api/stats)
+  GET http://127.0.0.1:9181/api/stats [200 OK, 946B, 4ms]
+  √  processed keeps up with enqueued and nothing is dropped
+
+→ 99 Leave room (POST /api/room/leave)
+  POST http://127.0.0.1:9181/api/room/leave [200 OK, 223B, 5ms]
+  √  200 OK
+
+┌─────────────────────────┬───────────────────┬───────────────────┐
+│                         │          executed │            failed │
+├─────────────────────────┼───────────────────┼───────────────────┤
+│              iterations │                 1 │                 0 │
+├─────────────────────────┼───────────────────┼───────────────────┤
+│                requests │                20 │                 0 │
+├─────────────────────────┼───────────────────┼───────────────────┤
+│            test-scripts │                20 │                 0 │
+├─────────────────────────┼───────────────────┼───────────────────┤
+│      prerequest-scripts │                 1 │                 0 │
+├─────────────────────────┼───────────────────┼───────────────────┤
+│              assertions │                38 │                 0 │
+├─────────────────────────┴───────────────────┴───────────────────┤
+│ total run duration: 4.8s                                        │
+├─────────────────────────────────────────────────────────────────┤
+│ total data received: 10.46kB (approx)                           │
+├─────────────────────────────────────────────────────────────────┤
+│ average response time: 153ms [min: 2ms, max: 2.9s, s.d.: 642ms] │
+└─────────────────────────────────────────────────────────────────┘

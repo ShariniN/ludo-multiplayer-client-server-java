@@ -1,0 +1,6 @@
+jdk/
+src/out/
+src/out-test/
+data/
+*.class
+*.log

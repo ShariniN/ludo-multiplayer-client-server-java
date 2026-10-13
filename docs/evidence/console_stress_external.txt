@@ -1,0 +1,33 @@
+   LUDO-T CONCURRENCY STRESS TEST SUITE (COMP63038)
+   Target: 127.0.0.1:9180 (external server)
+   Bots: 4   Duration: 10s   Room: STRESS-75311
+===============================================================
+[StressTest] 4 automated bot clients connected and playing...
+
+===============================================================
+               STRESS TEST RESULTS & METRICS                   
+===============================================================
+  Duration:                    10.0 seconds
+  Bot clients:                 4
+  Requests sent by bots:       2141
+  Messages received by bots:   15315
+  Avg heartbeat round-trip:    0.577 ms (792 samples)
+  Match reached GAME_OVER:     yes
+===============================================================
+Server-side counters: GET http://127.0.0.1:<httpPort>/api/stats (8081 by default)
+
+$ curl http://127.0.0.1:9181/api/stats
+{
+ "activeSessions": 23,
+ "queue": {
+  "capacity": 2000,
+  "workerThreads": 8,
+  "currentDepth": 0,
+  "peakDepth": 4,
+  "enqueued": 4172,
+  "processed": 4172,
+  "dropped": 0,
+  "avgProcessingMs": 0.184,
+  "avgQueueWaitMs": 0.051
+ }
+}

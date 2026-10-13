@@ -1,0 +1,9 @@
+Apache JMeter 5.6.3, non-GUI: jmeter -n -t ludo_jmeter_test_plan.jmx -JtcpPort=9180 -JhttpPort=9181
+summary =   3021 in 00:00:02 = 1526.5/s Avg:     0 Min:     0 Max:    84 Err:     0 (0.00%)
+HEARTBEAT over TCP (line protocol, EOL byte 10)  n= 1000 err=0 avg=    0.2ms p95=1ms max=11ms
+POST /api/room/join                              n=   20 err=0 avg=    9.8ms p95=58ms max=84ms
+GET /api/game/state                              n= 1000 err=0 avg=    0.6ms p95=1ms max=7ms
+POST /api/game/roll (queued turn action)         n= 1000 err=0 avg=    0.7ms p95=2ms max=8ms
+GET /api/stats                                   n=    1 err=0 avg=    2.0ms p95=2ms max=2ms
+roll response codes: {'409': 989, '200': 11}
+"queue":{"capacity":2000,"workerThreads":8,"currentDepth":0,"peakDepth":3,"enqueued":2020,"processed":2020,"dropped":0,"avgProcessingMs":0.067,"avgQueueWaitMs":0.043}

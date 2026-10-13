@@ -1,0 +1,16 @@
+> test.bat
+=== Compilation Succeeded! All tiers compiled to src\out ===
+=== Running the JUnit 5 suite (Assignment 1 domain + Assignment 2 concurrency/network/persistence) ===
+Test run finished after 43658 ms
+[        43 containers found      ]
+[         0 containers skipped    ]
+[        43 containers started    ]
+[         0 containers aborted    ]
+[        43 containers successful ]
+[         0 containers failed     ]
+[       280 tests found           ]
+[         0 tests skipped         ]
+[       280 tests started         ]
+[         0 tests aborted         ]
+[       280 tests successful      ]
+[         0 tests failed          ]

@@ -1,0 +1,37 @@
+===============================================================
+   LUDO-T CONCURRENCY STRESS TEST SUITE (COMP63038)
+   Target: 127.0.0.1:8089 (private in-process server)
+   Bots: 4   Duration: 10s   Room: STRESS-85578
+===============================================================
+===============================================================
+   LUDO-T GAME SERVER (TIER 2) - TCP PORT 8089
+   Queue: ArrayBlockingQueue(2000) + 8 QueueWorker threads
+   Persistence: in-memory H2 database 'stress'
+===============================================================
+[ClientHandler] Client connected: 076423d6-7259-418e-bb4c-f331ba404a30 from /127.0.0.1:60789
+[ClientHandler] Client connected: e55beb05-c1f2-4853-afff-892ed773bf93 from /127.0.0.1:60790
+[ClientHandler] Client connected: 11f6e880-230e-4d65-9703-7fc5f556d9e4 from /127.0.0.1:60791
+[ClientHandler] Client connected: 3516193d-b87a-49cb-9036-c62ac2af38b1 from /127.0.0.1:60792
+[StressTest] 4 automated bot clients connected and playing...
+
+===============================================================
+               STRESS TEST RESULTS & METRICS                   
+===============================================================
+  Duration:                    10.0 seconds
+  Bot clients:                 4
+  Requests sent by bots:       1355
+  Messages received by bots:   6870
+  Avg heartbeat round-trip:    0.516 ms (792 samples)
+  Match reached GAME_OVER:     yes
+  --- server-side queue metrics ---
+  Total enqueued requests:     1355
+  Total processed tasks:       1355
+  Total dropped tasks:         0 (expected: 0)
+  Peak queue depth:            4 / 2000
+  Avg queue wait:              0.068 ms
+  Avg task processing time:    0.258 ms
+  Effective throughput:        135.4 requests/sec
+===============================================================
+PASS: every request was queued and processed - 0 dropped, none lost.
+[LudoServer] Shutting down server...
+[LudoServer] Server stopped successfully.

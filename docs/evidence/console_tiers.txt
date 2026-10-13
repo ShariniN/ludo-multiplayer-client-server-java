@@ -1,0 +1,19 @@
+===============================================================
+   LUDO-T DATABASE SERVER (TIER 3) - H2 over TCP, port 9182
+   JDBC URL: jdbc:h2:tcp://<host>:9182/./ludo
+   Data directory: data
+   Accepts: this computer only
+   Contents: 0 players, 0 matches, 0 saved games
+===============================================================
+
+===============================================================
+   LUDO-T GAME SERVER (TIER 2) - TCP PORT 9180
+   Queue: ArrayBlockingQueue(2000) + 8 QueueWorker threads
+   Persistence: H2 DatabaseServer at 127.0.0.1:9182
+   HTTP: Apache Tomcat 10.1.60.0 (embedded) on port 9181, maxThreads 50, acceptCount 100
+     GET  /api/room/status   POST /api/room/join | /api/room/leave
+     POST /api/game/roll     POST /api/game/move   GET /api/game/events[?waitMs=]
+     GET  /api/game/state    GET  /api/leaderboard GET /api/stats
+     GET|POST /api/chat
+===============================================================
+[ClientHandler] Client connected: 94aedfbf-00f5-4d8e-a92c-a7e0c75ee0b1 from /127.0.0.1:64982
