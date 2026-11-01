@@ -1,0 +1,55 @@
+name: Security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  trivy:
+    name: Trivy filesystem scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Scan bundled jars and sources
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '1'
+
+  sonarcloud:
+    name: SonarCloud quality gate
+    # Runs only once the SONAR_TOKEN repository secret exists.
+    runs-on: ubuntu-latest
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Compile for Sonar
+        if: ${{ env.SONAR_TOKEN != '' }}
+        run: |
+          mkdir -p src/out
+          find src/ludo -name '*.java' > sources.txt
+          javac -d src/out -cp "lib/*" @sources.txt
+
+      - name: SonarCloud scan
+        if: ${{ env.SONAR_TOKEN != '' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: SonarSource/sonarqube-scan-action@v8
