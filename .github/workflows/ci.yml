@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  junit:
+    name: JUnit 5 suite (280 tests)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Compile production classes
+        run: |
+          mkdir -p src/out
+          find src/ludo -name '*.java' > sources.txt
+          javac -d src/out -cp "lib/*" @sources.txt
+          mkdir -p src/out/ludo/db
+          cp src/ludo/db/schema.sql src/out/ludo/db/schema.sql
+
+      - name: Compile test classes
+        run: |
+          find src/test -name '*.java' > test_sources.txt
+          javac -d src/out -cp "src/out:lib/*:lib/test/*" @test_sources.txt
+
+      - name: Run JUnit 5 suite
+        run: |
+          java -javaagent:lib/test/byte-buddy-agent-1.14.12.jar \
+            -cp "src/out:lib/*:lib/test/*" \
+            org.junit.platform.console.ConsoleLauncher execute \
+            --scan-class-path src/out \
+            --include-engine=junit-jupiter \
+            --details=summary --disable-banner \
+            --reports-dir build/junit
+
+      - name: Upload JUnit XML
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: junit-xml
+          path: build/junit

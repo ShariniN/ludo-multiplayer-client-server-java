@@ -1,5 +1,8 @@
 # LUDO-T: Multi-User Client-Server Ludo (Java)
 
+[![CI](https://github.com/ShariniN/ludo-multiplayer-client-server-java/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ShariniN/ludo-multiplayer-client-server-java/actions/workflows/ci.yml)
+[![Security](https://github.com/ShariniN/ludo-multiplayer-client-server-java/actions/workflows/security.yml/badge.svg?branch=main)](https://github.com/ShariniN/ludo-multiplayer-client-server-java/actions/workflows/security.yml)
+
 A three-tier, multi-user version of "Ludo with a Twist" (mystery cells, colour strategies, three-sixes rule), built in **Java 21** for a university module on clean coding and concurrent programming (2026).
 
 ![Live match](docs/figures/gui_live_mixed_match.png)
@@ -22,8 +25,12 @@ A three-tier, multi-user version of "Ludo with a Twist" (mystery cells, colour s
 | Stress test, private server | 1,355 requests, 0 dropped |
 | Live three tiers + stress bots | 2,141 bot requests; 4,172 enqueued = 4,172 processed, 0 dropped |
 | Newman (Postman collection) | 20 requests, 38 assertions, 0 failures |
-| JMeter | TCP + HTTP thread groups, `/api/stats` assertion |
+| JMeter 5.6.3 (non-GUI) | 3,021 samples at ~1,527 req/s, 0 errors; queue reported 2,020 enqueued = 2,020 processed, 0 dropped |
 | SonarQube / SonarLint | used to track cyclomatic and cognitive complexity during refactoring |
+
+![Server queue counters after a stress run](docs/figures/con_stress_external.png)
+
+The screenshot shows `/api/stats` after a 4-bot, 10-second run. The queue counters are cumulative since the server started: 5,381 enqueued, 5,381 processed, 0 dropped.
 
 Raw logs are in [`docs/evidence/`](docs/evidence/).
 
